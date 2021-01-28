@@ -8,12 +8,18 @@ from nltk.stem import WordNetLemmatizer
 
 from tensorflow.keras.models import load_model
 
+# from flask import Flask, jsonify, json, request
+#
+# app = Flask(__name__)
+
 lemmatizer = WordNetLemmatizer()
 intents = json.loads(open('intent.json').read())
 
 words = pickle.load(open('words.pkl', 'rb'))
 classes = pickle.load(open('classes.pkl', 'rb'))
 model = load_model('chatbotmodel.h5')
+
+
 # model = load_model('chatbot_model.model')
 
 
@@ -53,8 +59,24 @@ def get_response(intent_list, intents_json):
         if i['tag'] == tag:
             result = random.choice(i['responses'])
             break
+        # danuka added
+        else:
+            result = 'error ...'
     return result
 
+
+# @app.route('/html', methods=['GET'])
+# def get_html_button():
+#     query_parameters = request.args
+#     message = query_parameters.get('message')
+#     ints = predict_class(message)
+#     res = get_response(ints, intents)
+#
+#     return res
+#
+#
+# if __name__ == '__main__':
+#     app.run(debug=True)
 
 print("GO! bot is running!")
 
