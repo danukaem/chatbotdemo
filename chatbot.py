@@ -8,9 +8,12 @@ from nltk.stem import WordNetLemmatizer
 
 from tensorflow.keras.models import load_model
 
-# from flask import Flask, jsonify, json, request
-#
-# app = Flask(__name__)
+from flask import Flask, jsonify, json, request
+from flask_cors import CORS
+
+app = Flask(__name__)
+
+CORS(app)
 
 lemmatizer = WordNetLemmatizer()
 intents = json.loads(open('intent.json').read())
@@ -65,23 +68,26 @@ def get_response(intent_list, intents_json):
     return result
 
 
-# @app.route('/html', methods=['GET'])
-# def get_html_button():
-#     query_parameters = request.args
-#     message = query_parameters.get('message')
-#     ints = predict_class(message)
-#     res = get_response(ints, intents)
-#
-#     return res
-#
-#
-# if __name__ == '__main__':
-#     app.run(debug=True)
-
-print("GO! bot is running!")
-
-while True:
-    message = input("")
+@app.route('/chat', methods=['GET'])
+def get_chat_response():
+    query_parameters = request.args
+    message = query_parameters.get('message')
+    print(message)
     ints = predict_class(message)
     res = get_response(ints, intents)
     print(res)
+
+    # return res
+    return jsonify({"userMessage": res})
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+# print("GO! bot is running!")
+#
+# while True:
+#     message = input("")
+#     ints = predict_class(message)
+#     res = get_response(ints, intents)
+#     print(res)
